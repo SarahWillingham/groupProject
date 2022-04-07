@@ -13,7 +13,7 @@ public class ConnectionManager {
     private static final String PASSWORD = "4701Br0wn"; // Windows: root
                                                        // Mac/Linux: Root@123
     
-    public static Connection getConnection() {
+    public static Connection getConnection() 
         
         Connection conn = null;
         
