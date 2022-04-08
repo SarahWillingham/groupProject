@@ -102,13 +102,13 @@ public class Main {
 	
 	
 	public static void displayShowsDB(int userId) throws SQLException {
-		System.out.println("displayShowsDB called");
 		Connection conn = ConnectionManager.getConnection();
-		PreparedStatement pstmt = conn.prepareStatement("SELECT show_id, show_title from shows;");
+		String sql = "SELECT * FROM shows;";
+		PreparedStatement stst = conn.prepareStatement(sql);
 
-	    ResultSet showsDB = pstmt.executeQuery();
-    	while(showsDB.next()) {
-    		System.out.println(showsDB.getString("show_id") + " " + showsDB.getString("show_title"));
+	    ResultSet result = stst.executeQuery();
+    	while(result.next()) {
+    		System.out.println(result.getString("show_id") + " " + result.getString("show_title"));
     	 }
 		
 		System.out.println("Select an option:");
