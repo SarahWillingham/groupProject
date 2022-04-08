@@ -25,7 +25,6 @@ public class ConnectionManager {
             Class.forName("com.mysql.cj.jdbc.Driver");
             
             conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            System.out.println("Connected");
             
         } catch (SQLException e) {
             System.out.println("Connection failed");
@@ -36,10 +35,5 @@ public class ConnectionManager {
         }
         
         return conn;
-    }
-
-	
-	
-	
-	
+    }	
 }
