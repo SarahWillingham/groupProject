@@ -44,6 +44,7 @@ public class Main {
 	    			 System.out.println("user id = " + userId);
 	    		 }else {
 	    			 System.out.println("login failed!");
+	    			 login();
 	    		 }	    				
 	    				
 	    	 }
@@ -83,7 +84,7 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 
 		System.out.println("Enter a number for your choice");
-		System.out.println("1: Update status of a show  2: Search for a new show 3: Logout 4: change password");
+		System.out.println("1: Update status of a show \n2: Search for a new show \n3: Logout \n4: change password");
 		int choice = sc.nextInt();
 		if(choice == 1) {
 			updateStatus(userId);
@@ -207,8 +208,21 @@ public class Main {
 		ps.execute();
 		dashboard(userId);
 		conn.close();
-		
 	}
 	
-
+	
+    public static void newShow(int userId) throws SQLException {
+    
+    	Connection conn = ConnectionManager.getConnection();
+    	
+    	System.out.println("Enter the name of a show you want to add: ");
+    	
+    	Scanner sc = new Scanner(System.in);
+    	String showName = sc.nextLine();
+    	    	
+		PreparedStatement ps = conn.prepareStatement("INSERT INTO shows(show_name) values('" + showName + "');");
+		ps.execute();
+    	
+		dashboard(userId);
+  	}	
 }
