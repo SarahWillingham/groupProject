@@ -51,12 +51,14 @@ public class Main {
 	    	 }
 	    	 if (loginSuccess == true) {
 	    		 System.out.println("Do you want to: ");
-	    		 System.out.println("1. View/edit your watch list      2. View the database");
+	    		 System.out.println("1. View/edit your watch list      2. View the database		3. Logout");
 	    		 choice = sc.nextInt();
 	    		 if(choice == 1) {
 	    			 dashboard(userId);
 	    		 }else if(choice == 2) {
 	    			 //function to send user to database
+	    		 }else if(choice == 3) {
+	    			 login();
 	    		 }
 	    	 }
 			
@@ -81,14 +83,15 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 
 		System.out.println("Enter a number for your choice");
-		System.out.println("1: Update status of a show,  2: Search for a new show");
+		System.out.println("1: Update status of a show,  2: Search for a new show, 3: Logout");
 		int choice = sc.nextInt();
 		if(choice == 1) {
 			updateStatus(userId);
 		}else if(choice == 2) {
-			// call search function here
+			// go to database search from here
 		
-		}
+		}else if(choice == 3) 
+			
 		sc.close();
 		
 	}
@@ -102,20 +105,24 @@ public class Main {
 		Connection conn = ConnectionManager.getConnection();
 		PreparedStatement pstmt = conn.prepareStatement("SELECT t.user_id, s.show_id, s.show_title, t.status, t.tracker_id from tracker as t inner join shows as s on t.show_id = s.show_id where user_id = '" + userId + "';");
 
-		ResultSet rs = pstmt.executeQuery();
+		pstmt.executeQuery();
 
 
 		
 		Scanner sc = new Scanner(System.in);
 		int updateId = sc.nextInt();
 		System.out.println("updateId = " + updateId);
-		System.out.println("Select new status: 1 for \"in progress\" or 2 for \"finished\"");
+		System.out.println("Select new status: 1 for 'in progress' or 2 for 'finished' or 3 to remove from your watch list or 4 to go back");
 		newStatus = sc.nextInt();
 		
 		if(newStatus == 1) {
 			sqlStatement = "update tracker set status = 'in progress' where tracker_id = " + updateId + ";";
 		} else if(newStatus == 2) {
 			sqlStatement = "update tracker set status = 'finished' where tracker_id = " + updateId + ";";
+		} else if(newStatus == 3) {
+			sqlStatement = "delete from tracker where tracker_id = " + updateId + ";";
+		} else if(newStatus == 4) {
+			dashboard(userId);
 		}
 		
 		
@@ -123,16 +130,6 @@ public class Main {
 		ps.execute();
 		
 		dashboard(userId);
-	}
-	
-	
-	public void addToWatchlist(int trackerId) {
-		
-	}
-	
-	
-	public void removeFromWatchList(int trackerId) {
-		
 	}
 	
 
