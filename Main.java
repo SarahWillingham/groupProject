@@ -57,7 +57,7 @@ public class Main {
 	    		 if(choice == 1) {
 	    			 dashboard(userId);
 	    		 }else if(choice == 2) {
-	    			 displayShowsDB();
+	    			 displayShowsDB(userId);
 	    		 }else if(choice == 3) {
 	    			 login();
 	    		 }else if(choice == 4) {
