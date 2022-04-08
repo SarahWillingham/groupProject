@@ -2,6 +2,7 @@ package Controller;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -51,14 +52,16 @@ public class Main {
 	    	 }
 	    	 if (loginSuccess == true) {
 	    		 System.out.println("Do you want to: ");
-	    		 System.out.println("1. View/edit your watch list      2. View the database		3. Logout");
+	    		 System.out.println("1. View/edit your watch list      2. View the database		3. Logout	4. Change username/password");
 	    		 choice = sc.nextInt();
 	    		 if(choice == 1) {
 	    			 dashboard(userId);
 	    		 }else if(choice == 2) {
-	    			 //function to send user to database
+	    			 displayShowsDB();
 	    		 }else if(choice == 3) {
 	    			 login();
+	    		 }else if(choice == 4) {
+	    			updateUserPassword(userId);
 	    		 }
 	    	 }
 			
@@ -83,18 +86,47 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 
 		System.out.println("Enter a number for your choice");
-		System.out.println("1: Update status of a show,  2: Search for a new show, 3: Logout");
+		System.out.println("1: Update status of a show,  2: Search for a new show, 3: Logout, 4: change username/password");
 		int choice = sc.nextInt();
 		if(choice == 1) {
 			updateStatus(userId);
 		}else if(choice == 2) {
-			// go to database search from here
-		
-		}else if(choice == 3) 
-			
+			displayShowsDB(userId);
+		}else if(choice == 3) { 
+			login();
+		}
 		sc.close();
 		
 	}
+	
+	
+	
+	public static void displayShowsDB(int userId) throws SQLException {
+		System.out.println("displayShowsDB called");
+		Connection conn = ConnectionManager.getConnection();
+		PreparedStatement pstmt = conn.prepareStatement("SELECT show_id, show_title from shows;");
+
+	    ResultSet showsDB = pstmt.executeQuery();
+    	while(showsDB.next()) {
+    		System.out.println(showsDB.getString("show_id") + " " + showsDB.getString("show_title"));
+    	 }
+		
+		System.out.println("Select an option:");
+		System.out.println("1: Search for a show    2: Add show to watch List    3: Go to watch list");
+		
+		Scanner sc = new Scanner(System.in);
+		int choice = sc.nextInt();
+		
+		if(choice == 1) {
+			//allow user to search
+		}else if(choice == 2) {
+			//add show to watch list
+		}else if(choice == 3) {
+			dashboard(userId);
+		}
+		
+	}
+	
 	
 	
 	public static void updateStatus(int userId) throws SQLException {
@@ -130,6 +162,22 @@ public class Main {
 		ps.execute();
 		
 		dashboard(userId);
+	}
+	
+	
+	public static void updateUserPassword(int userId) throws SQLException {
+		
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Please enter your new password.");
+		String newPassword = sc.next();
+
+		Connection conn = ConnectionManager.getConnection();
+		String sqlStatement ="UPDATE user SET user_password = '" + newPassword + "' WHERE user_Id = '" + userId + "';";
+		PreparedStatement ps = conn.prepareStatement(sqlStatement);
+		ps.execute();
+		dashboard(userId);
+		conn.close();
+		
 	}
 	
 
