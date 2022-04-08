@@ -212,10 +212,11 @@ public class Main {
 	
 
 	// method to add a show to a user's tracker list
-    public static void addToWatchList(int showId, int userId) throws SQLException, InvalidInputException{
+    public static boolean addToWatchList(int showId, int userId) throws SQLException, InvalidInputException{
     	
     	Connection conn = ConnectionManager.getConnection();
-
+    	boolean success = false;
+    	
     	// statement to insert a new tracker record into the database
     	String sql = "INSERT INTO tracker(user_id, show_id, status) values (" + userId + ", " + showId + ", 'not started');";
     	PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -224,6 +225,7 @@ public class Main {
     	// if added successfully, print success statement
    		if(row > 0) {
    			System.out.println("A new show has been added successfully!");
+   			success = true;
    		}else {
    			System.out.println("Failed to add show.");
    		}
@@ -232,7 +234,7 @@ public class Main {
   		
   		// go back to list of shows in the database
    		displayShowsDB(userId);
-   		
+   		return success;
     }
 	
 	// method to remove a show from a user's tracker list
