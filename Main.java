@@ -69,7 +69,7 @@ public class Main {
 	}
 
 	
-	
+	// shows options to the user after they have successfully logged in
 	public static void loginMenu(int userId) throws SQLException, IncorrectPasswordException {
 		
 		int choice;
@@ -99,6 +99,7 @@ public class Main {
 			}else {
 				throw new InvalidInputException();
 			}
+		// if user's input is not one of the options, give an error message and go back to the beginning of this method
 		} catch (InvalidInputException e) {
 	    	 System.out.println("Invalid input.  Please try again.");
 	    	 loginMenu(userId);
