@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Main {
 
 
-	public static void main(String[] args) throws InvalidInputException {
+	public static void main(String[] args) throws InvalidInputException, IncorrectPasswordException {
 		// go to log in menu
 		login();
    
@@ -22,7 +22,6 @@ public class Main {
 		String passwordInput = null;
 		
 		int userId = 0;
-		int choice;
 		
 		// ask for username and password, store them in usernameInput and passwordInput
 		Scanner sc = new Scanner(System.in);
@@ -52,47 +51,67 @@ public class Main {
 	    			 
 	    		 // if passwords don't match, go back to beginning of method and ask for username again
 	    		 }else {
-	    			 System.out.println("login failed!");
-	    			 login();
+	    			 throw new IncorrectPasswordException();
 	    		 }	    				
 	    	 }
 	    	 
 	    	 // if passwords match, ask user what to do next
 	    	 if (loginSuccess == true) {
-	    		 System.out.println("Do you want to: ");
-	    		 System.out.println("1. View/edit your watch list \n2. View the database \n3. Logout \n4. Change password");
-	    		 choice = sc.nextInt();
-	    		 
-	    		 // go to user's watch list
-	    		 if(choice == 1) {
-	    			 dashboard(userId);
-	    			 
-	    		 // display list of shows in the database by alphabetical order
-	    		 }else if(choice == 2) {
-	    			 displayShowsDB(userId);
-	    			 
-	    	     // go back to login menu
-	    		 }else if(choice == 3) {
-	    			 login();
-	    			 
-	    		 // go to method to update user password
-	    		 }else if(choice == 4) {
-	    			updateUserPassword(userId);
-	    		 }else {
-	    			 throw new InvalidInputException();
-	    		 }
+	    		 loginMenu(userId);
 	    	 }
 			
 	     } catch(SQLException e) {
 	    	 e.printStackTrace();
-	     } catch(InvalidInputException e) {
-	    	 System.out.println("Invalid input.  Please try again.");
-	     }
+	     } catch (IncorrectPasswordException e) {
+	    	 System.out.println("Incorrect password.  Login failed!");
+	    	 login();
+		}
 	}
 
 	
+	
+	public static void loginMenu(int userId) throws SQLException, IncorrectPasswordException {
+		
+		int choice;
+		Scanner sc = new Scanner(System.in);
+
+		System.out.println("Do you want to: ");
+		System.out.println("1. View/edit your watch list \n2. View the database \n3. Logout \n4. Change password");
+		
+		try {
+			choice = sc.nextInt();
+			
+			// go to user's watch list
+			if(choice == 1) {
+				dashboard(userId);
+			 
+			// display list of shows in the database by alphabetical order
+			}else if(choice == 2) {
+				displayShowsDB(userId);
+				 
+		    // go back to login menu
+			}else if(choice == 3) {
+				 login();
+				 
+			// go to method to update user password
+			}else if(choice == 4) {
+				updateUserPassword(userId);
+			}else {
+				throw new InvalidInputException();
+			}
+		} catch (InvalidInputException e) {
+	    	 System.out.println("Invalid input.  Please try again.");
+	    	 loginMenu(userId);
+		} catch (java.util.InputMismatchException e) {
+	    	 System.out.println("Invalid input.  Please try again.");
+	    	 loginMenu(userId);
+		}
+		
+	}
+	
+	
 	// method to display user's personal watch list, gives option to update trackers, go to database, or change password
-	public static void dashboard(int userId) throws SQLException, InvalidInputException {
+	public static void dashboard(int userId) throws SQLException, InvalidInputException, IncorrectPasswordException {
 		
 
 	    Connection conn = ConnectionManager.getConnection();
@@ -136,7 +155,7 @@ public class Main {
 	}
 	
 	// method to change the status of a show in the user's tracker list
-	public static void updateStatus(int userId) throws SQLException, InvalidInputException {
+	public static void updateStatus(int userId) throws SQLException, InvalidInputException, IncorrectPasswordException {
 		int newStatus;
 		String sqlStatement = null;
 		System.out.println("Select a tracker ID to update");	
@@ -178,7 +197,7 @@ public class Main {
 	}
 	
 	// method to display list of shows in the database
-	public static void displayShowsDB(int userId) throws SQLException, InvalidInputException {
+	public static void displayShowsDB(int userId) throws SQLException, InvalidInputException, IncorrectPasswordException {
 		Connection conn = ConnectionManager.getConnection();
 		
 		// statement to get list of all shows
@@ -212,7 +231,7 @@ public class Main {
 	
 
 	// method to add a show to a user's tracker list
-    public static boolean addToWatchList(int showId, int userId) throws SQLException, InvalidInputException{
+    public static boolean addToWatchList(int showId, int userId) throws SQLException, InvalidInputException, IncorrectPasswordException{
     	
     	Connection conn = ConnectionManager.getConnection();
     	boolean success = false;
@@ -238,7 +257,7 @@ public class Main {
     }
 	
 	// method to remove a show from a user's tracker list
-	public static void removeFromWatchList(int trackerId, int userId) throws SQLException, InvalidInputException {
+	public static void removeFromWatchList(int trackerId, int userId) throws SQLException, InvalidInputException, IncorrectPasswordException {
 		
     	Connection conn = ConnectionManager.getConnection();
     	
@@ -254,7 +273,7 @@ public class Main {
 	}
 	
 	// method to change the user's password
-	public static void updateUserPassword(int userId) throws SQLException, InvalidInputException {
+	public static void updateUserPassword(int userId) throws SQLException, InvalidInputException, IncorrectPasswordException {
 		
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Please enter your new password.");
@@ -273,8 +292,8 @@ public class Main {
 		
 	}
 	
-	
-    public static void newShow(int userId) throws SQLException, InvalidInputException {
+	// this method is not implemented.  It would only be used by an admin user to edit the database of shows
+    public static void newShow(int userId) throws SQLException, InvalidInputException, IncorrectPasswordException {
     
     	Connection conn = ConnectionManager.getConnection();
     	
@@ -290,3 +309,4 @@ public class Main {
   	}
 	
 }
+
