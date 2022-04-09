@@ -9,8 +9,8 @@ public class ConnectionManager {
     // Windows: jdbc:mysql://localhost:3306/university
     // Mac/Linux: jdbc:mysql://localhost:3306/university?serverTimezone=EST5EDT
     private static final String URL = "jdbc:mysql://localhost:3306/progress_tracker";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "4701Br0wn"; // Windows: root
+    private static final String USERNAME = "";
+    private static final String PASSWORD = ""; // Windows: root
                                                        // Mac/Linux: Root@123
     
     public static Connection getConnection() 
