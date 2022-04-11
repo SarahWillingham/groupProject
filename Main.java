@@ -287,8 +287,8 @@ public class Main {
 		PreparedStatement ps = conn.prepareStatement(sqlStatement);
 		ps.execute();
 		
-		// go back to user's watch list
-		dashboard(userId);
+		// go back to login menu
+		loginMenu(userId);
 		conn.close();
 		
 	}
